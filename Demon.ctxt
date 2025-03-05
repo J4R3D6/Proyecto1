@@ -1,0 +1,19 @@
+#BlueJ class context
+comment0.target=Demon
+comment1.params=escala\ x\ y
+comment1.target=Demon(int,\ int,\ int)
+comment2.params=
+comment2.target=void\ cargarImagen()
+comment3.params=
+comment3.target=void\ makeVisible()
+comment4.params=
+comment4.target=void\ makeInvisible()
+comment5.params=
+comment5.target=void\ draw()
+comment6.params=
+comment6.target=void\ erase()
+comment7.params=a
+comment7.target=void\ changeEscala(int)
+comment8.params=x\ y
+comment8.target=void\ moveTo(int,\ int)
+numComments=9
