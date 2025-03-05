@@ -35,6 +35,7 @@ public class MaxwellContainer
         tablero.add(recta1);
         tablero.add(recta2);
         tablero.add(recta3);
+        
     }
     public void makeVisible(){
         for(Rectangle o : this.tablero){
@@ -53,7 +54,7 @@ public class MaxwellContainer
         }
     }
     public void addDeamon() {
-        Deamon deamon = new Deamon(20, (this.Width / 2), (this.Height / 2));
+        Deamon deamon = new Deamon(100, (this.Width / 2), (this.Height / 2));
         demons.add(deamon);
     }
 }
