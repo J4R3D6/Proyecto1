@@ -11,12 +11,14 @@ public class Deamon {
     public Deamon(int width, int x, int y) {
         formas(width, x, y);
     }
-    public void formas(int width, int x, int y) {
-        Rectangle r1 = new Rectangle(x,y,width,width,"red");
-        Rectangle r2 = new Rectangle((x+(width / 3)),(y+((width / 18)*14)),(width / 9),(width / 3),"black");
+    public void formas(int widht, int x, int y) {
+        Rectangle r1 = new Rectangle(x,y,widht,widht,"red");
+        Rectangle r2 = new Rectangle((x+(widht / 3)),(y+((widht / 18)*14)),(widht / 9),(widht / 3),"black");
+        Rectangle r3 = new Rectangle((x+(widht / 9)),(y+((widht / 9))),(widht / 9),(widht / 3),"black");
+        Rectangle r4 = new Rectangle((x+(widht / 9)*5),(y+((widht / 9))),(widht / 9),(widht / 3),"black");
 
-        //Rectangle r3 = new Rectangle(x,y,width,width,"red");
-        //Rectangle r4 = new Rectangle(x,y,width,width,"red");
+        Rectangle r5 = new Rectangle((x+(widht / 18)*4),(y+((widht / 3))),(widht /9),(widht / 9),"black");
+
         //Rectangle r5 = new Rectangle(x,y,width,width,"red");
         //Rectangle r6 = new Rectangle(x,y,width,width,"red");
         //Triangle t1 = new Triangle(x,y,width,width,"red");
@@ -26,9 +28,9 @@ public class Deamon {
         this.figures = new ArrayList();
         figures.add(r1);
         figures.add(r2);
-        //figures.add(r3);
-        //figures.add(r4);
-        //figures.add(r5);
+        figures.add(r3);
+        figures.add(r4);
+        figures.add(r5);
         //figures.add(r6);
         //figures.add(t1);
         //figures.add(t1);
