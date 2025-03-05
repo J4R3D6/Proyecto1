@@ -32,6 +32,17 @@ public class Canvas{
         canvasSingleton.setVisible(true);
         return canvasSingleton;
     }
+    /**
+     * Factory method to get the canvas singleton object.
+     */
+    public static Canvas getCanvas(int width, int height){
+        if(canvasSingleton == null) {
+            canvasSingleton = new Canvas("BlueJ Shapes Demo", width, height, 
+                                         Color.white);
+        }
+        canvasSingleton.setVisible(true);
+        return canvasSingleton;
+    }
 
     //  ----- instance part -----
 
@@ -42,6 +53,23 @@ public class Canvas{
     private Image canvasImage;
     private List <Object> objects;
     private HashMap <Object,ShapeDescription> shapes;
+    
+    /**
+     * Create a Canvas.
+     * @param width  the desired width for the canvas
+     * @param height  the desired height for the canvas
+     */
+    public Canvas(int width, int height){
+        frame = new JFrame();
+        canvas = new CanvasPane();
+        frame.setContentPane(canvas);
+        frame.setTitle("MaxWell");
+        canvas.setPreferredSize(new Dimension(width, height));
+        backgroundColour = Color.white;
+        frame.pack();
+        objects = new ArrayList <Object>();
+        shapes = new HashMap <Object,ShapeDescription>();
+    }
     
     /**
      * Create a Canvas.

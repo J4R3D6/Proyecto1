@@ -1,14 +1,14 @@
 import java.awt.*;
 import javax.swing.*;
 
-public class Demon {
+public class Deamon {
     private int escala;
     private int xPosition;
     private int yPosition;
     private boolean isVisible;
     private Image textura;
 
-    public Demon(int escala, int x, int y) {
+    public Deamon(int escala, int x, int y) {
         this.escala = escala;
         this.xPosition = x;
         this.yPosition = y;

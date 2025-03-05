@@ -22,7 +22,19 @@ public class Rectangle{
 
     /**
      * Create a new rectangle at default position with default color.
+     * Change the color. 
+     * @param color the new color. Valid colors are "red", "yellow", "blue", "green",
+     * "magenta" and "black".
      */
+    public Rectangle(int x, int y, int Height, int Width, String Color){
+        height = Height;
+        width = Width;
+        xPosition = x;
+        yPosition = y;
+        color = Color;
+        isVisible = false;
+    }
+    
     public Rectangle(){
         height = 30;
         width = 40;

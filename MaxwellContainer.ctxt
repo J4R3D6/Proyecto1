@@ -1,0 +1,17 @@
+#BlueJ class context
+comment0.target=MaxwellContainer
+comment0.text=\r\n\ Write\ a\ description\ of\ class\ MaxwellContainer\ here.\r\n\r\n\ @author\ (your\ name)\r\n\ @version\ (a\ version\ number\ or\ a\ date)\r\n
+comment1.params=width\ height
+comment1.target=MaxwellContainer(int,\ int)
+comment1.text=\r\n\ Constructor\ for\ objects\ of\ class\ MaxwellContainer\r\n
+comment2.params=width\ height
+comment2.target=void\ CrearCanvas(int,\ int)
+comment3.params=width\ height
+comment3.target=void\ CrearTablero(int,\ int)
+comment4.params=
+comment4.target=void\ makeVisible()
+comment5.params=
+comment5.target=void\ makeInvisible()
+comment6.params=
+comment6.target=void\ addDeamon()
+numComments=7
