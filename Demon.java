@@ -31,14 +31,14 @@ public class Demon {
         isVisible = false;
     }
 
-    public void draw() {
+    private void draw() {
         if (isVisible) {
             Canvas canvas = Canvas.getCanvas();
             canvas.drawImage(this, textura, xPosition, yPosition);
         }
     }
     
-    public void erase(){
+    private void erase(){
             if(isVisible) {
                 Canvas canvas = Canvas.getCanvas();
                 canvas.erase(this);
@@ -50,6 +50,7 @@ public class Demon {
         this.escala = a;
         cargarImagen();
         draw();
+        this.makeVisible();
     }
     
     public void moveTo(int x, int y) {

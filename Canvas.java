@@ -204,7 +204,6 @@ public class Canvas{
         objects.remove(referenceObject);
         objects.add(referenceObject);
         shapes.put(referenceObject, null); // No necesitamos una forma
-    
         Graphics2D g = (Graphics2D) canvasImage.getGraphics();
         g.drawImage(img, x, y, null);
         canvas.repaint();
