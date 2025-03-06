@@ -46,6 +46,14 @@ public class Rectangle extends Figure{
      * @param newHeight the new height in pixels. newHeight must be >=0.
      * @param newWidht the new width in pixels. newWidth must be >=0.
      */
+    @Override
+    public void changeSize(int a) {
+        erase();
+        height = a;
+        width = a;
+        draw();
+    }
+    
     public void changeSize(int newHeight, int newWidth) {
         erase();
         height = newHeight;

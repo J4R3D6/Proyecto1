@@ -36,7 +36,13 @@ public class Triangle extends Figure{
         color = "green";
         isVisible = false;
     }
-
+    @Override
+    public void changeSize(int a) {
+        erase();
+        height = a;
+        width = a;
+        draw();
+    }
     /**
      * Change the size to the new size
      * @param newHeight the new height in pixels. newHeight must be >=0.

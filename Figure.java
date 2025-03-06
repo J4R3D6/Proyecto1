@@ -140,4 +140,8 @@ public class Figure
     protected void draw(){
         
     }
+    
+    protected void changeSize(int a){
+        
+    }
 }

@@ -1,7 +1,7 @@
 #BlueJ class context
 comment0.target=Deamon
-comment1.params=width\ x\ y
-comment1.target=Deamon(int,\ int,\ int)
+comment1.params=x\ y
+comment1.target=Deamon(int,\ int)
 comment2.params=widht\ x\ y
 comment2.target=void\ formas(int,\ int,\ int)
 comment3.params=
@@ -12,8 +12,8 @@ comment5.params=
 comment5.target=void\ draw()
 comment6.params=
 comment6.target=void\ erase()
-comment7.params=a
-comment7.target=void\ changeSize(int)
-comment8.params=x\ y
-comment8.target=void\ moveTo(int,\ int)
+comment7.params=x\ y
+comment7.target=void\ move(int,\ int)
+comment8.params=
+comment8.target=java.util.ArrayList\ getYPosition()
 numComments=9

@@ -45,6 +45,7 @@ public class Circle extends Figure{
      * Change the size.
      * @param newDiameter the new size (in pixels). Size must be >=0.
      */
+    @Override
     public void changeSize(int newDiameter){
         erase();
         diameter = newDiameter;

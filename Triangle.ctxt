@@ -7,10 +7,12 @@ comment1.text=\r\n\ Create\ a\ new\ triangle\ at\ default\ position\ with\ defau
 comment2.params=
 comment2.target=Triangle()
 comment2.text=\r\n\ Create\ a\ new\ triangle\ at\ default\ position\ with\ default\ color.\r\n
-comment3.params=newHeight\ newWidth
-comment3.target=void\ changeSize(int,\ int)
-comment3.text=\r\n\ Change\ the\ size\ to\ the\ new\ size\r\n\ @param\ newHeight\ the\ new\ height\ in\ pixels.\ newHeight\ must\ be\ >\=0.\r\n\ @param\ newWidht\ the\ new\ width\ in\ pixels.\ newWidht\ must\ be\ >\=0.\r\n
-comment4.params=
-comment4.target=void\ draw()
-comment4.text=\r\n\ Draw\ the\ triangle\ with\ current\ specifications\ on\ screen.\r\n
-numComments=5
+comment3.params=a
+comment3.target=void\ changeSize(int)
+comment4.params=newHeight\ newWidth
+comment4.target=void\ changeSize(int,\ int)
+comment4.text=\r\n\ Change\ the\ size\ to\ the\ new\ size\r\n\ @param\ newHeight\ the\ new\ height\ in\ pixels.\ newHeight\ must\ be\ >\=0.\r\n\ @param\ newWidht\ the\ new\ width\ in\ pixels.\ newWidht\ must\ be\ >\=0.\r\n
+comment5.params=
+comment5.target=void\ draw()
+comment5.text=\r\n\ Draw\ the\ triangle\ with\ current\ specifications\ on\ screen.\r\n
+numComments=6
