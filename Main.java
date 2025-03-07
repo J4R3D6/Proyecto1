@@ -1,16 +1,16 @@
 public class Main {
     public static void main(String[] args) {
         int[][] particlesData = {
-            {50, 50, 5, 5},
+            {2, 2, 19, 30},
             {360, 20, 5, 5},
-            {60, 140, 5, 5},
-            {270, 118, 5, 5},
-            {60, 15, 5, 5},
-            {176, 140, 5, 5},
-            {270, 78, 5, 5}};
+            {60, 140,-400, 0},
+            {270, 118, 55, -35},
+            /**{60, 15, 15, 5},
+            {176, 140, 25, 5},
+            {270, 78, 55, 5}**/};
 
-        MaxwellContainer container = new MaxwellContainer(200, 200, 100, 3, 4, particlesData);
-        container.start(150);
+        MaxwellContainer container = new MaxwellContainer(200, 200, 100, 0, 4, particlesData);
+        container.start(250);
         //container.particles();
     }
     

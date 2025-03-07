@@ -141,7 +141,7 @@ public class Canvas{
      * @param  newColour   the new colour for the foreground of the Canvas 
      */
     public void setForegroundColor(String colorString){
-                        if(colorString.equals("black"))
+        if(colorString.equals("black"))
             graphic.setColor(Color.black);
         else if(colorString.equals("blue"))
             graphic.setColor(Color.blue);
@@ -167,8 +167,10 @@ public class Canvas{
             graphic.setColor(Color.white);
         else if(colorString.equals("yellow"))
             graphic.setColor(Color.yellow);
+        else if(colorString.equals("black"))
+            graphic.setColor(Color.black);
         else
-            graphic.setColor(Color.black);                                                       
+            graphic.setColor(Color.decode(colorString));
     }
 
     /**

@@ -14,7 +14,7 @@ public class Deamon {
         this.yPosition.add(y+36);
     }
     public void formas(int widht, int x, int y) {
-        Rectangle r1 = new Rectangle(x,y,widht,widht,"red");
+        Rectangle r1 = new Rectangle(x,y,widht,widht,"#7405af");
         Rectangle r2 = new Rectangle((x+(widht / 5)),(y+((widht /5))),(widht / 5),(widht / 5),"black");
         Rectangle r3 = new Rectangle((x+(widht / 5)*3),(y+((widht / 5))),(widht / 5),(widht / 5),"black");
         Rectangle r4 = new Rectangle((x+(widht / 5)),(y+((widht / 5)*3)),(widht / 5),((widht / 5)*3),"black");

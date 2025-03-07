@@ -1,3 +1,4 @@
+import java.lang.Math;
 /**
  * Write a description of class Particle here.
  * 
@@ -12,6 +13,7 @@ public class Particle
     private boolean isRed; 
     private Circle circle;
     private String color;
+    private int diametro;
     
     public Particle(String color, boolean isRed, int x, int y, int vx, int vy, int d,int h, int w) {
         int X = (x-(d/2));
@@ -20,12 +22,12 @@ public class Particle
         this.y1 = Y;
         this.x2 = X+d;
         this.y2 = Y+d;
+        this.diametro = Math.abs(x1-x2);
         this.vx = vx;
         this.vy = vy;
         this.m1 = 5;
-        this.m2 = ((w/2)-(w/128));
-        this.m3 = ((w/2)-(w/128))+(w/64);
-        this.m4 = w-5;
+        this.m2 = ((w/2));
+        this.m3 = w-5;
         this.t1 = 5;
         this.t2 = h-5;
         this.isRed = isRed;
@@ -55,11 +57,35 @@ public class Particle
     }
     
     public void crash(){
-        if(y1== t1 || y2 == t2){
-            this.vy = -vy;
+        if((y1 == t1 || y1+this.vy < t1) || (y2 == t2 ||  y2+this.vy > t2)){
+             if(y1+this.vy < t1|| y2+this.vy > t2){
+                if(y1+this.vy < t1){
+                    this.y1 = this.t1;
+                    this.y2 = this.y1+this.diametro;
+                    this.vy = -vy;
+                }else if(y2+this.vy > t2){
+                    this.y2 = this.t2;
+                    this.y1 = this.y2-this.diametro;
+                    this.vy = -vy;
+                }
+            }else{
+                this.vy = -vy;
+            }
         }
-        if(x1 == m1 || y2 == m2 || x1 == m3 || x2 == m4){
-            this.vx = -vx;
+        if((x1 == m1 || x1+this.vx < m1) || (x2 == m3 || x2+this.vx > m3)){
+            if(x1+this.vx < m1|| x2+this.vx > m3){
+                if(x1+this.vx < t1){
+                    this.x1 = this.m1;
+                    this.x2 = this.x1+this.diametro;
+                    this.vx = -vx;
+                }else if(x2+this.vx > m3){
+                    this.x2 = this.m3;
+                    this.x1 = this.x2-this.diametro;
+                    this.vx = -vx;
+                }
+            }else{
+                this.vx = -vx;
+            }
         }
     }
     

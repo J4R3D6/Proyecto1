@@ -146,7 +146,7 @@ public class MaxwellContainer
     public void start(int ticks) {
         for (int i = 0; i < ticks; i++) {
             for(Particle p: this.particles){
-                p.move(ticks);
+                p.move(1);
             }
         }
         //particles.parallelStream().forEach(p -> p.move(ticks));
