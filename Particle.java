@@ -1,4 +1,5 @@
 import java.lang.Math;
+import java.util.*;
 /**
  * Write a description of class Particle here.
  * 
@@ -14,7 +15,7 @@ public class Particle
     private Circle circle;
     private String color;
     private int diametro;
-    private int diametroDemonio;
+    private int radioDemonio;
     private int posicionDemonio,DcoorX1,DcoorX2,DcoorY1,DcoorY2,DcoorM;
     
     public Particle(String color, boolean isRed, int x, int y, int vx, int vy, int d,int h, int w, int posDemon , int demon) {
@@ -23,7 +24,7 @@ public class Particle
         this.x1 = X;
         this.y1 = Y;
         this.x2 = X+d;
-        this.diametroDemonio =demon;
+        this.radioDemonio =demon;
         this.posicionDemonio =posDemon;
         this.y2 = Y+d;
         this.diametro = Math.abs(x1-x2);
@@ -52,6 +53,10 @@ public class Particle
     public void draw(){
         this.circle.draw();
     } 
+    
+    public boolean getIsRed(){
+        return this.isRed;
+    }
     
     public String getColor(){
         return this.color;
@@ -126,24 +131,32 @@ public class Particle
         }
     }
     
-    public void crashDemIzq(){
-        if( (DcoorX1<= x2 &&  x2<= DcoorM) && ( (DcoorY2 <= y1 && y1<= DcoorY1) || (DcoorY1<= y2 && y2 <= DcoorY2) )){
+    public void crashDemonIzq(){
+        if( ((DcoorX1<= x2 || DcoorX1<= x2+vx) &&  (x2<= DcoorM || vx+x2<= DcoorM)) && ( (DcoorY2 <= y1 && y1<= DcoorY1) || (DcoorY1<= y2 && y2 <= DcoorY2) )){
             boolean permiso = this.DemonAccess();
             System.out.println(permiso);
             if (permiso){
-                this.crashMDer();
+                x1 += vx*2;
+                y1 += vy*2;
+                x2 += vx*2;
+                y2 += vy*2;
+                this.softMove(vx*2, vy*2);
             }else{
                 this.vx = -vx;
             }
         }
     }
     
-    public void crashDemDer(){
-        if( (DcoorM <= x1 &&  x1<= DcoorX2) && ( (DcoorY2 <= y1 && y1<= DcoorY1) || (DcoorY1<= y2 && y2 <= DcoorY2) )){
+    public void crashDemonDer(){
+        if( ((DcoorM <= x1 || DcoorM <= x1+vx ) &&  (x1<= DcoorX2 || x1+vx<= DcoorX2)) && ( (DcoorY2 <= y1 && y1<= DcoorY1) || (DcoorY1<= y2 && y2 <= DcoorY2) )){
             boolean permiso = this.DemonAccess();
             System.out.println(permiso);
             if (permiso){
-                this.crashMIzq();
+                x1 += vx*2;
+                y1 += vy*2;
+                x2 += vx*2;
+                y2 += vy*2;
+                this.softMove(vx*2, vy*2);
             }else{
                 this.vx = -vx;
             }
@@ -156,11 +169,11 @@ public class Particle
     
     public void move(int dt) {
         for(int i = 0;i < dt;i++){
+            this.crashDemonIzq();
+            this.crashDemonDer();
             this.crashY();
             this.crashMIzq();
             this.crashMDer();
-            this.crashDemIzq();
-            this.crashDemDer();
             this.crashX();
             x1 += vx;
             y1 += vy;
@@ -174,5 +187,26 @@ public class Particle
             this.circle.moveHorizontal(x);
             this.circle.moveVertical(y);
             this.circle.makeVisible();
+    }
+    
+    public ArrayList<Integer> getPositionsY(){
+        ArrayList<Integer> positions = new ArrayList<>();
+        positions.add(y1);
+        positions.add(y2);
+        return positions;
+    }
+    public ArrayList<Integer> getPositionsX(){
+        ArrayList<Integer> positions = new ArrayList<>();
+        positions.add(x1);
+        positions.add(x2);
+        return positions;
+    }
+    public ArrayList<Integer> getPositions(){
+        ArrayList<Integer> positions = new ArrayList<>();
+        positions.add(x1);
+        positions.add(x2);
+        positions.add(y1);
+        positions.add(y2);
+        return positions;
     }
 }
