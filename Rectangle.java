@@ -22,9 +22,9 @@ public class Rectangle extends Figure{
      * @param color the new color. Valid colors are "red", "yellow", "blue", "green",
      * "magenta" and "black".
      */
-    public Rectangle(int x, int y, int Height, int Width, String Color){
-        height = Height;
-        width = Width;
+    public Rectangle(int x, int y, int H, int W, String Color){
+        this.height = H;
+        this.width = W;
         xPosition = x;
         yPosition = y;
         color = Color;

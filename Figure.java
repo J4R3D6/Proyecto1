@@ -118,9 +118,11 @@ public class Figure
     }
     
     /**
-     * Change the color. 
-     * @param color the new color. Valid colors are "red", "yellow", "blue", "green",
-     * "magenta" and "black".
+     * Change the color.
+     * @param color the new color. 
+     * Valid colors are: "black", "blue", "cyan", "dark_gray", "gray", 
+     * "green", "light_gray", "magenta", "orange", "pink", "red", 
+     * "white", and "yellow".
      */
     protected void changeColor(String newColor){
         color = newColor;
