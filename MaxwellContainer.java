@@ -17,6 +17,7 @@ public class MaxwellContainer
     private int blueParticles;
     private int redParticles;
     private boolean isVisible;
+    private int DistanciaDomonio;
     /**
      * Constructor for objects of class MaxwellContainer
      */
@@ -33,6 +34,7 @@ public class MaxwellContainer
         this.demons = new TreeMap<>();
         this.particles = new ArrayList<>();
         addDeamon(d);
+        this.DistanciaDomonio=d;
         this.blueParticles = b;
         this.redParticles = r;
         addParticlesForMatriz(particlesData);
@@ -101,7 +103,7 @@ public class MaxwellContainer
     
     public void addDeamon(int d) {
         if (!crashDeamon(d)) {
-            Deamon deamon = new Deamon(((this.Width / 2)-(this.Height/10)), (d - (this.Height/10)),(this.Height/5));
+            Deamon deamon = new Deamon(((this.Width / 2)-(this.Height/20)), (d - (this.Height/20)),(this.Height/10));
             deamon.makeVisible();
             demons.put(d,deamon);
             System.out.println("Demonio en "+d+" fue creado exitosamente");
@@ -130,7 +132,7 @@ public class MaxwellContainer
     }
     
     public void addParticle(String color, boolean isRed, int x, int y, int vx, int vy){
-        this.particles.add(new Particle(color, isRed, x, y, vx, vy,(this.Height/20), this.Height, this.Width));        
+        this.particles.add(new Particle(color, isRed, x, y, vx, vy,(this.Height/20), this.Height, this.Width,(this.DistanciaDomonio - (this.Height/20)),(this.Height/20)));        
     }
     
     public void delParticle(String color){
@@ -149,7 +151,7 @@ public class MaxwellContainer
                 p.move(1);
             }
         }
-        //particles.parallelStream().forEach(p -> p.move(ticks));
+        //particles.parallelStream().forEach(p -> p.move(1));
     }
 
 }

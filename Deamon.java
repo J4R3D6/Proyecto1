@@ -3,15 +3,28 @@ import java.awt.*;
 import javax.swing.*;
 
 public class Deamon {
-    private ArrayList<Integer> yPosition;
+    private ArrayList<Integer> yPositions;
     private boolean isVisible;
     private ArrayList<Figure> figures;
+    private Image textura;
+    private int xPosition, yPosition, escala;
 
     public Deamon(int x, int y, int escala) {
+        cargarImagen(escala);
         formas(escala, x, y);
-        this.yPosition = new ArrayList();
-        this.yPosition.add(y);
-        this.yPosition.add(y+36);
+        this.escala = escala;
+        this.yPosition =y;
+        this.xPosition =x;
+        this.yPositions = new ArrayList();
+        this.yPositions.add(y);
+        this.yPositions.add(y+36);
+    }
+    private void cargarImagen(int escala) {
+        ImageIcon icon = new ImageIcon("imagenes/demon.png");
+        textura = icon.getImage().getScaledInstance(escala, escala, Image.SCALE_SMOOTH);
+    } 
+    private int getEscala() {
+        return this.escala;
     }
     public void formas(int widht, int x, int y) {
         Rectangle r1 = new Rectangle(x,y,widht,widht,"#7405af");
@@ -42,12 +55,36 @@ public class Deamon {
         }
         this.isVisible = false;
     }
+    
+    /**public void makeVisible() {
+        isVisible = true;
+        draw();
+    }
 
+    public void makeInvisible() {
+        erase();
+        isVisible = false;
+    }
+    
+    public void erase(){
+            if(isVisible) {
+                Canvas canvas = Canvas.getCanvas();
+                canvas.erase(this);
+            }
+    }
+    public void draw() {
+        if (isVisible) {
+            Canvas canvas = Canvas.getCanvas();
+            canvas.drawImage(this, textura, xPosition, yPosition);
+        }
+    }**/
+    
     private void draw() {
         for (Figure f: this.figures){
             f.draw();
         }
     }
+    
     public void erase(){
         for (Figure f: this.figures){
             f.erase();
@@ -61,8 +98,8 @@ public class Deamon {
         }
         draw();
     }
-    public ArrayList<Integer> getYPosition(){
-        return this.yPosition;
+    public ArrayList<Integer> getYPositions(){
+        return this.yPositions;
     }
 }
 
