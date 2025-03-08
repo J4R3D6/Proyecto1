@@ -40,9 +40,6 @@ public class Particle
         this.demonios.remove(new ArrayList<>(Arrays.asList(x,y)));
     }
     
-    public boolean DemonAccess(){
-        return Math.random() < 0.5;
-    }
     
     public void addDemon(int x , int y){
         this.demonios.add(new ArrayList<>(Arrays.asList(x,y)));
@@ -80,20 +77,44 @@ public class Particle
         this.circle.makeInvisible();
     }
     
+    public boolean DemonAccess(int Y){
+        for (ArrayList<Integer> demon : demonios) {
+            if (demon.get(0) == middle && demon.get(1) == Y) {
+                return Math.random() < 0.5;
+            }
+        }
+        return false;
+    }
     
     public void move(int dt) {
-        for(int i = 0;i < dt;i++){
-            int newX = x + vx * dt;
+        int newX = x + vx * dt;
         int newY = y + vy * dt;
         
-        // Colisión con los bordes
-        if (newX < 5 || newX > width - 5 - size) vx *= -1;
-        if (newY < 5 || newY > height - 5 - size) vy *= -1;
+        // Colisión con los bordes laterales
+        if (newX < 5) {
+            newX = 5;
+            vx *= -1;
+        }
+        if (newX > width - 5 - size) {
+            newX = width - 5 - size;
+            vx *= -1;
+        }
         
-        // Intentar cruzar el muro (middle)
+        // Colisión con los bordes superior e inferior
+        if (newY < 5) {
+            newY = 5;
+            vy *= -1;
+        }
+        if (newY > height - 5 - size) {
+            newY = height - 5 - size;
+            vy *= -1;
+        }
+        
+        // Intentar cruzar el muro (middle) solo si hay un demonio en la misma coordenada y
         if ((x < middle && newX >= middle) || (x > middle && newX <= middle)) {
-            if (!DemonAccess()) {
-                vx *= -1; // Rebote si no puede cruzar
+            if (!DemonAccess(y)) {
+                newX = (vx > 0) ? middle - 1 : middle + 1;
+                vx *= -1;
             }
         }
 
@@ -108,18 +129,21 @@ public class Particle
         }
 
         // Actualizar posición
-        x += vx * dt;
-        y += vy * dt;
-        softMove(vx * dt, vy * dt);
+        if (newX != x || newY != y) {
+            softMove(newX - x, newY - y);
+            x = newX;
+            y = newY;
         }
     }
     public int[] getParticleData() {
         return new int[]{x,y,vx,vy};
     }
-    public void softMove(int x, int y){
-        this.circle.makeInvisible();
-        this.circle.moveHorizontal(x);
-        this.circle.moveVertical(y);
-        this.circle.makeVisible();
+    public void softMove(int dx, int dy) {
+        if (dx != 0 || dy != 0) {
+            this.circle.makeInvisible();
+            this.circle.moveHorizontal(dx);
+            this.circle.moveVertical(dy);
+            this.circle.makeVisible();
+        }
     }
 }
