@@ -76,11 +76,13 @@ public class Particle
     public void makeInvisible(){
         this.circle.makeInvisible();
     }
-    
-    public boolean DemonAccess(int Y){
+
+    public boolean DemonAccess(int newY) {
         for (ArrayList<Integer> demon : demonios) {
-            if (demon.get(0) == middle && demon.get(1) == Y) {
-                return Math.random() < 0.5;
+            if (demon.get(0) == middle && Math.abs(demon.get(1) - newY) <= 10) {
+                boolean a =Math.random() < 0.5;
+                System.out.println(a);
+                return a;
             }
         }
         return false;
@@ -114,7 +116,7 @@ public class Particle
             }
         }
         for (Hole hole : holes) {
-            if (hole.getCoords().get(0) == newX && hole.getCoords().get(1) == newY) {
+            if (Math.abs(hole.getCoords().get(0) - newX) <=10 && Math.abs(hole.getCoords().get(1) - newY) <=10 ) {
                 if (!hole.itsFull()) {
                     this.makeInvisible();
                     vx=0;
