@@ -117,14 +117,14 @@ public class MaxwellContainer
         return this.demons.containsKey(d);
     }
     
-    //private boolean crashDeamon(int d){
-    //    for (int i=(d-(this.Height/5)); i<= (d+(this.Height/5)) ;i++){
-    //        if (searchDeamon(i)){
-    //            return true;
-    //        }
-    //    }
-    //    return false;
-    //}
+    private boolean crashDeamon(int d){
+        for (int i=(d-10); i<= (d+10) ;i++){
+            if (searchDeamon(i)){
+                return true;
+            }
+        }
+        return false;
+    }
     
     public void addDeamon(int d) {
         if (!searchDeamon(d)) {
@@ -163,7 +163,7 @@ public class MaxwellContainer
     
     public void addParticle(String color, boolean isRed, int x, int y, int vx, int vy){
         Particle partucila = new Particle(color, isRed, x, y, vx, vy);
-        this.particles.add(partucila);        
+        this.particles.add(partucila);       
     }
     
     public void delParticle(String color){
@@ -224,9 +224,10 @@ public class MaxwellContainer
     }
     public void addHole(int x, int y, int particles){
         if (particles > 0){
-            this.holes.add(new Hole(x, y, particles));
+            Hole a = new Hole(x, y, particles);
+            this.holes.add(a);
             if(this.particles.size() !=0 ){
-                this.particles.get(0).addhole(x , y);
+                this.particles.get(0).addhole(a);
             }
             isOk =true;
             ok();

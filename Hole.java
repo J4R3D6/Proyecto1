@@ -1,4 +1,4 @@
-
+import java.util.*;
 /**
  * Write a description of class Hole here.
  * 
@@ -15,7 +15,7 @@ public class Hole
     private boolean full = false;
 
     public Hole(int x, int y, int particles){
-        this.hole = new Circle(x-10, y-10, 20, "#426964");
+        this.hole = new Circle(x-10, y-10, 20, "#01ffdc");
         makeVisible();
         centroX = x;
         centroY = y;
@@ -40,13 +40,23 @@ public class Hole
         return data;
     }
     
+    public boolean itsFull(){
+        return this.full;
+    }
+    
     public void atrapado(){
         ocupados += 1;
         capacidadllena();
     }
+    
+    public ArrayList<Integer> getCoords(){
+        return new ArrayList<>(Arrays.asList(centroX,centroY));
+    }
+    
     public void capacidadllena(){
         if (capacidad == ocupados){
             full = true;
+            makeInvisible();
         }
     }
 } 

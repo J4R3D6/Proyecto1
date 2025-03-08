@@ -13,7 +13,7 @@ public class Particle
     private int vx,vy;
     private int x,y;
     private static ArrayList<ArrayList<Integer>> demonios = new ArrayList<>();
-    private static ArrayList<ArrayList<Integer>> holes = new ArrayList<>();
+    private static ArrayList<Hole> holes = new ArrayList<>();
     //private boolean colision = true;
     private final boolean isRed;
     private Circle circle;
@@ -44,8 +44,8 @@ public class Particle
     public void addDemon(int x , int y){
         this.demonios.add(new ArrayList<>(Arrays.asList(x,y)));
     }
-    public void addhole(int x , int y){
-        this.holes.add(new ArrayList<>(Arrays.asList(x,y)));
+    public void addhole(Hole a){
+        this.holes.add(a);
     }
     
     public boolean posicionCorrecta(){
@@ -89,8 +89,6 @@ public class Particle
     public void move(int dt) {
         int newX = x + vx * dt;
         int newY = y + vy * dt;
-        
-        // Colisión con los bordes laterales
         if (newX < 5) {
             newX = 5;
             vx *= -1;
@@ -99,8 +97,6 @@ public class Particle
             newX = width - 5 - size;
             vx *= -1;
         }
-        
-        // Colisión con los bordes superior e inferior
         if (newY < 5) {
             newY = 5;
             vy *= -1;
@@ -111,18 +107,19 @@ public class Particle
         }
         
         // Intentar cruzar el muro (middle) solo si hay un demonio en la misma coordenada y
-        if ((x < middle && newX >= middle) || (x > middle && newX <= middle)) {
+        if ((x < middle-2 && newX >= middle) || (x > middle+2 && newX <= middle)) {
             if (!DemonAccess(y)) {
                 newX = (vx > 0) ? middle - 1 : middle + 1;
                 vx *= -1;
             }
         }
-
-        // Verificar si cae en un agujero
-        for (ArrayList<Integer> hole : holes) {
-            if (hole.get(0) == newX && hole.get(1) == newY) {
-                if (Math.random() < 0.5) { // Probabilidad de desaparecer
-                    makeInvisible();
+        for (Hole hole : holes) {
+            if (hole.getCoords().get(0) == newX && hole.getCoords().get(1) == newY) {
+                if (!hole.itsFull()) {
+                    this.makeInvisible();
+                    vx=0;
+                    vy=0;
+                    hole.atrapado();
                     return;
                 }
             }
