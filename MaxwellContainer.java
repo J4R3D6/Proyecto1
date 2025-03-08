@@ -46,6 +46,7 @@ public class MaxwellContainer
             this.blueParticles = b;
             this.redParticles = r;
             addParticlesForMatriz(particlesData);
+            mandarMedidas();
             addDeamon(d);
             this.makeVisible();
         }
@@ -54,7 +55,11 @@ public class MaxwellContainer
     private boolean  ok(){
         return isOk;
     }
-    
+    private void mandarMedidas(){
+        if(this.particles.size() !=0 ){
+            this.particles.get(0).medidas(this.Width ,this.Height);
+        }
+    }
     private void CrearCanvas(int width, int heigth){
         canvas = new Canvas(width, heigth);
         canvas.getCanvas(width, heigth);
@@ -126,8 +131,8 @@ public class MaxwellContainer
             Deamon deamon = new Deamon(((this.Width / 2)-(10)), (d - (10)),20);
             deamon.makeVisible();
             demons.put(d,deamon);
-            for (Particle p: this.particles){
-                p.addDemon((this.Width / 2) , d);
+            if(this.particles.size() !=0 ){
+                this.particles.get(0).addDemon((this.Width / 2) , d);
             }
         }else{
             System.out.println("Hay un demonio en este lugar");
@@ -138,8 +143,8 @@ public class MaxwellContainer
         if (searchDeamon(d)){
             this.demons.get(d).erase();
             this.demons.remove(d);
-            for (Particle p: this.particles){
-                p.delDemon((this.Width / 2) , d);
+            if(this.particles.size() !=0 ){
+                this.particles.get(0).delDemon((this.Width / 2) , d);
             }
         }else{
             System.out.println("Demoniio no Existe");
@@ -177,7 +182,6 @@ public class MaxwellContainer
                 p.move(1);
                 finish();
             }
-            finish();
         }
         //particles.parallelStream().forEach(p -> p.move(1));
     }
@@ -189,7 +193,6 @@ public class MaxwellContainer
         return Escalas;
     }
     public void finish(){
-        System.out.println(isGoal());
         if (isGoal()){
              JOptionPane.showMessageDialog(null, "Juego terminado");
          }
@@ -206,7 +209,7 @@ public class MaxwellContainer
     public int[][] particles(){
         int [][] dataParticles = new int[4][this.particles.size()];
         for(int i=0 ;i<this.particles.size();i++){
-            int[] data = particles.get(i).cunsultarParticula();
+            int[] data = particles.get(i).getParticleData();
             dataParticles[i][0] =data[0];
             dataParticles[i][1] =data[1];
             dataParticles[i][2] =data[2];
@@ -222,8 +225,8 @@ public class MaxwellContainer
     public void addHole(int x, int y, int particles){
         if (particles > 0){
             this.holes.add(new Hole(x, y, particles));
-            for (Particle p: this.particles){
-                p.addhole(x , y);
+            if(this.particles.size() !=0 ){
+                this.particles.get(0).addhole(x , y);
             }
             isOk =true;
             ok();
