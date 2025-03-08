@@ -1,0 +1,16 @@
+#BlueJ class context
+comment0.target=Hole
+comment0.text=\r\n\ Write\ a\ description\ of\ class\ Hole\ here.\r\n\ \r\n\ @author\ (your\ name)\ \r\n\ @version\ (a\ version\ number\ or\ a\ date)\r\n
+comment1.params=x\ y\ particles
+comment1.target=Hole(int,\ int,\ int)
+comment2.params=
+comment2.target=void\ makeVisible()
+comment3.params=
+comment3.target=void\ makeInvisible()
+comment4.params=
+comment4.target=int[]\ dataHole()
+comment5.params=
+comment5.target=void\ atrapado()
+comment6.params=
+comment6.target=void\ capacidadllena()
+numComments=7

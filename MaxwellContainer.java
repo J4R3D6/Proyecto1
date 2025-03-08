@@ -11,6 +11,7 @@ public class MaxwellContainer
 {
     private static Canvas canvas;
     private TreeMap<Integer, Deamon> demons;
+    private ArrayList<Hole> holes;
     private ArrayList<Particle> particles;
     private ArrayList<Rectangle> tablero;
     private int Height;
@@ -18,19 +19,18 @@ public class MaxwellContainer
     private int blueParticles;
     private int redParticles;
     private boolean isVisible;
-    private int DistanciaDomonio;
     private boolean isOk;
+    
     /**
      * Constructor for objects of class MaxwellContainer
      */
     private MaxwellContainer(int h, int w){
-        if  ((2<=h && w<=2000) && (2<=w && w<=2000)){
+        if  ((2<=h && h<=2000) && (2<=w && w<=2000)){
             this.isOk = true;
             this.Height = h;
             this.Width = w; 
             CrearCanvas(w, h);
             CrearTablero(w, h);
-            this.demons = new TreeMap<>();
         }else{
             this.isOk = false;
             ok();
@@ -41,13 +41,12 @@ public class MaxwellContainer
         this(h, (w*2));
         if(isOk){
             this.demons = new TreeMap<>();
+            this.holes = new ArrayList<>();
             this.particles = new ArrayList<>();
-            addDeamon(d);
-            this.isOk = true;
-            this.DistanciaDomonio=d;
             this.blueParticles = b;
             this.redParticles = r;
             addParticlesForMatriz(particlesData);
+            addDeamon(d);
             this.makeVisible();
         }
     }
@@ -64,7 +63,7 @@ public class MaxwellContainer
     private void CrearTablero(int w, int h){
         Rectangle recta1 = new Rectangle( 0, 0, h, w, "orange");
         Rectangle recta2 = new Rectangle( 5, 5, (h-10) , (w - 10), "white");
-        Rectangle  recta3 = new Rectangle( ((w/2)-(w/128)), 0 ,h, (w/64), "gray");
+        Rectangle  recta3 = new Rectangle( ((w/2)-(2)), 0 ,h, (4), "gray");
         this.tablero = new ArrayList<>();
         tablero.add(recta1);
         tablero.add(recta2);
@@ -87,6 +86,9 @@ public class MaxwellContainer
         for(Particle o : this.particles){
             o.makeVisible();
         }
+        for(Hole h : this.holes){
+            h.makeVisible();
+        }
     }
     
     public void makeInvisible(){
@@ -101,29 +103,34 @@ public class MaxwellContainer
         for(Particle o : this.particles){
             o.makeInvisible();
         }
+        for(Hole h : this.holes){
+            h.makeInvisible();
+        }
     }
     
     private boolean searchDeamon(int d){
         return this.demons.containsKey(d);
     }
     
-    private boolean crashDeamon(int d){
-        for (int i=(d-(this.Height/5)); i<= (d+(this.Height/5)) ;i++){
-            if (searchDeamon(i)){
-                return true;
-            }
-        }
-        return false;
-    }
+    //private boolean crashDeamon(int d){
+    //    for (int i=(d-(this.Height/5)); i<= (d+(this.Height/5)) ;i++){
+    //        if (searchDeamon(i)){
+    //            return true;
+    //        }
+    //    }
+    //    return false;
+    //}
     
     public void addDeamon(int d) {
-        if (!crashDeamon(d)) {
-            Deamon deamon = new Deamon(((this.Width / 2)-(this.Height/20)), (d - (this.Height/20)),(this.Height/10));
+        if (!searchDeamon(d)) {
+            Deamon deamon = new Deamon(((this.Width / 2)-(10)), (d - (10)),20);
             deamon.makeVisible();
             demons.put(d,deamon);
-            System.out.println("Demonio en "+d+" fue creado exitosamente");
+            for (Particle p: this.particles){
+                p.addDemon((this.Width / 2) , d);
+            }
         }else{
-            System.out.println("Hay un demonio en este lugar o muy cerca");
+            System.out.println("Hay un demonio en este lugar");
         }
     }
     
@@ -131,6 +138,9 @@ public class MaxwellContainer
         if (searchDeamon(d)){
             this.demons.get(d).erase();
             this.demons.remove(d);
+            for (Particle p: this.particles){
+                p.delDemon((this.Width / 2) , d);
+            }
         }else{
             System.out.println("Demoniio no Existe");
         }
@@ -147,7 +157,8 @@ public class MaxwellContainer
     }
     
     public void addParticle(String color, boolean isRed, int x, int y, int vx, int vy){
-        this.particles.add(new Particle(color, isRed, x, y, vx, vy,(this.Height/20), this.Height, this.Width,(this.DistanciaDomonio - (this.Height/20)),(this.Height/20)));        
+        Particle partucila = new Particle(color, isRed, x, y, vx, vy);
+        this.particles.add(partucila);        
     }
     
     public void delParticle(String color){
@@ -170,20 +181,65 @@ public class MaxwellContainer
         }
         //particles.parallelStream().forEach(p -> p.move(1));
     }
-    
+    public ArrayList<Integer> demonEscala(){
+        ArrayList<Integer> Escalas = new ArrayList<>();
+        for(Deamon d : this.demons.values()){
+                 Escalas.add(d.getEscala());
+            }
+        return Escalas;
+    }
     public void finish(){
-         if (isGoal()){
+        System.out.println(isGoal());
+        if (isGoal()){
              JOptionPane.showMessageDialog(null, "Juego terminado");
          }
     }
     
     public boolean isGoal(){
          for (Particle p: particles){
-             ArrayList<Integer> posiciones = p.getPositionsX();
-             if ( !((posiciones.get(0) >= (Width/2) && p.getIsRed()) && (posiciones.get(1) <= (Width/2) && !p.getIsRed())) ){
-                 return true;
+             if (!p.posicionCorrecta()){
+                 return false;
              }
          }
          return true;
+    }
+    public int[][] particles(){
+        int [][] dataParticles = new int[4][this.particles.size()];
+        for(int i=0 ;i<this.particles.size();i++){
+            int[] data = particles.get(i).cunsultarParticula();
+            dataParticles[i][0] =data[0];
+            dataParticles[i][1] =data[1];
+            dataParticles[i][2] =data[2];
+            dataParticles[i][3] =data[3];
+        }
+        return dataParticles;
+    }
+    public int[] demons(){
+        int[] dataDemons = demons.keySet().stream().mapToInt(Integer::intValue).toArray();
+        Arrays.sort(dataDemons);
+        return dataDemons;
+    }
+    public void addHole(int x, int y, int particles){
+        if (particles > 0){
+            this.holes.add(new Hole(x, y, particles));
+            for (Particle p: this.particles){
+                p.addhole(x , y);
+            }
+            isOk =true;
+            ok();
+        }else{
+            isOk =false;
+            ok();
+        }
+    }
+        public int[][] holes(){
+        int [][] dataHoles = new int[3][holes.size()];
+        for(int i=0 ;i<holes.size();i++){
+            int[] data = holes.get(i).dataHole();
+            dataHoles[i][0] =data[0];
+            dataHoles[i][1] =data[1];
+            dataHoles[i][2] =data[2];
+        }
+        return dataHoles;
     }
 }
