@@ -33,9 +33,9 @@ public class Hole
     } 
     public int[] dataHole(){
         int[] data =  {
-            centroX,
+            (centroX-200),
             centroY,
-            ocupados
+            capacidad-ocupados
         };
         return data;
     }

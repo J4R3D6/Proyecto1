@@ -80,9 +80,7 @@ public class Particle
     public boolean DemonAccess(int newY) {
         for (ArrayList<Integer> demon : demonios) {
             if (demon.get(0) == middle && Math.abs(demon.get(1) - newY) <= 10) {
-                boolean a =Math.random() < 0.5;
-                System.out.println(a);
-                return a;
+                return Math.random() < 0.5;
             }
         }
         return false;
@@ -135,7 +133,7 @@ public class Particle
         }
     }
     public int[] getParticleData() {
-        return new int[]{x,y,vx,vy};
+        return new int[]{(x-200),y,vx,vy};
     }
     public void softMove(int dx, int dy) {
         if (dx != 0 || dy != 0) {
