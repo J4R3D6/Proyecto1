@@ -375,7 +375,7 @@ public class MaxwellContainer {
     public void addHole(int x, int y, int particles) {
         if ((5 <= Math.abs(x) && Math.abs(x) <= this.Width - 5 && 5 <= y && y <= this.Height - 5) && this.isOk) {
             if (particles > 0) {
-                Hole a = new Hole(x + 200, y, particles);
+                Hole a = new Hole(x + (this.Width / 2), y, particles);
                 this.holes.add(a);
                 if (this.particles.size() != 0) {
                     this.particles.get(0).addhole(a);

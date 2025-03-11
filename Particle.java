@@ -15,7 +15,7 @@ public class Particle
     private static ArrayList<ArrayList<Integer>> demonios = new ArrayList<>();
     private static ArrayList<Hole> holes = new ArrayList<>();
     //private boolean colision = true;
-    private final boolean isRed;
+    private boolean isRed;
     private Circle circle;
     private String color;
     
@@ -120,6 +120,11 @@ public class Particle
                     vx=0;
                     vy=0;
                     hole.atrapado();
+                    if(x<middle){
+                        isRed = false;
+                    }else{
+                        isRed = true;
+                    }
                     return;
                 }
             }
