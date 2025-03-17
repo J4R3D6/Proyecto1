@@ -12,122 +12,58 @@ import javax.swing.JOptionPane;
  * @version (versión o fecha)
  */
 public class MaxwellContainer {
-    private static Canvas canvas; 
-    private TreeMap<Integer, Deamon> demons = new TreeMap<>(); 
+    private static Canvas canvas;
+    private ArrayList<Demon> demons = new ArrayList<>(); 
     private ArrayList<Hole> holes = new ArrayList<>(); 
-    private ArrayList<Particle> particles = new ArrayList<>(); 
-    private ArrayList<Rectangle> tablero = new ArrayList<>(); 
-    private int Height; 
-    private int Width; 
-    private int blueParticles; 
-    private int redParticles; 
-    private boolean isVisible = true; 
-    private boolean gameOver = false; 
-    private boolean isOk = true; 
+    private ArrayList<Particle> particles = new ArrayList<>();
+    private Rectangle middle;
+    private int w; 
+    private int h;
+    private boolean isVisible = false;
+    private boolean isOk = true;
+    private int factor=10;
 
-    /**
-     * Constructor privado de MaxwellContainer.
-     * Inicializa el contenedor con las dimensiones dadas.
-     * 
-     * @param h Altura del tablero.
-     * @param w Ancho del tablero.
-     */
+    
     private MaxwellContainer(int h, int w) {
         if ((2 <= h && h <= 200) && (2 <= w && w <= 200)) {
+            this.w = w*factor;
+            this.h = h*factor;
+            canvas = new Canvas(w*2*factor, h*factor);
+            canvas.getCanvas(w*2*factor, h*factor);
+            middle = new Rectangle((w*factor)-1, 0, h*factor,(2) , "gray");
             this.isOk = true;
-            this.Height = h;
-            this.Width = w * 2;
-            CrearCanvas(w * 2, h);
-            CrearTablero(w * 2, h); 
-        } else if (this.isOk) {
-            this.isOk = false;
+        }else{
             errorSignal("Medidas para el tablero invalidas");
-            ok();
+            this.isOk = false;
         }
     }
 
-    /**
-     * Constructor público de MaxwellContainer.
-     * Inicializa el contenedor con partículas, demonios y agujeros.
-     * 
-     * @param h Altura del tablero.
-     * @param w Ancho del tablero.
-     * @param d Posición del demonio.
-     * @param b Número de partículas azules.
-     * @param r Número de partículas rojas.
-     * @param particlesData Matriz con los datos de las partículas (posición y velocidad).
-     */
+
     public MaxwellContainer(int h, int w, int d, int b, int r, int[][] particlesData) {
         this(h, w);
         if (isOk) {
-            this.blueParticles = b;
-            this.redParticles = r;
-            addParticlesForMatriz(particlesData); 
-            mandarMedidas();
-            addDeamon(d); 
-            this.makeVisible(); 
+            for (int i = 0; i < (b + r); i++) {
+                addParticle(""+i, i < r, particlesData[i][0], particlesData[i][1], particlesData[i][2], particlesData[i][3]);
+            }
+            addDeamon(d*factor); 
         }
     }
 
-    /**
-     * Verifica si el estado del contenedor es válido.
-     * 
-     * @return true si el estado es válido, false en caso contrario.
-     */
     public boolean ok() {
         return isOk;
-    }
-
-    /**
-     * Envía las medidas del tablero a las partículas.
-     */
-    private void mandarMedidas() {
-        if (this.particles.size() != 0) {
-            this.particles.get(0).medidas(this.Width, this.Height);
-        }
-    }
-
-    /**
-     * Crea el lienzo del tablero.
-     * 
-     * @param width Ancho del lienzo.
-     * @param height Altura del lienzo.
-     */
-    private void CrearCanvas(int width, int height) {
-        canvas = new Canvas(width, height);
-        canvas.getCanvas(width, height);
-    }
-
-    /**
-     * Crea el tablero con rectángulos.
-     * 
-     * @param w Ancho del tablero.
-     * @param h Altura del tablero.
-     */
-    private void CrearTablero(int w, int h) {
-        Rectangle recta1 = new Rectangle(0, 0, h, w, "orange"); 
-        Rectangle recta2 = new Rectangle(5, 5, (h - 10), (w - 10), "white");
-        Rectangle recta3 = new Rectangle(((w / 2) - (2)), 0, h, (4), "gray");
-        tablero.add(recta1);
-        tablero.add(recta2);
-        tablero.add(recta3);
     }
 
     /**
      * Hace visible el tablero y todos sus elementos.
      */
     public void makeVisible() {
-        for (Rectangle o : this.tablero) {
-            o.makeVisible();
-        }
-        if (this.demons.size() != 0) {
-            for (Deamon d : this.demons.values()) {
+        this.middle.makeVisible();
+        for (Demon d : this.demons) {
                 d.makeVisible();
             }
-        }
-        for (Particle o : this.particles) {
-            o.makeVisible();
-        }
+        for (Particle o : particles) {
+                o.makeVisible();
+            }
         for (Hole h : this.holes) {
             h.makeVisible();
         }
@@ -138,16 +74,12 @@ public class MaxwellContainer {
      * Hace invisible el tablero y todos sus elementos.
      */
     public void makeInvisible() {
-        for (Rectangle o : this.tablero) {
-            o.makeInvisible();
-        }
-        if (this.demons.size() != 0) {
-            for (Deamon d : this.demons.values()) {
+        this.middle.makeInvisible();
+        for (Demon d : this.demons) {
                 d.makeInvisible();
-            }
         }
-        for (Particle o : this.particles) {
-            o.makeInvisible();
+        for (Particle o : particles) {
+                o.makeInvisible();
         }
         for (Hole h : this.holes) {
             h.makeInvisible();
@@ -156,52 +88,25 @@ public class MaxwellContainer {
     }
 
     /**
-     * Busca un demonio en la posición dada.
-     * 
-     * @param d Posición del demonio.
-     * @return true si el demonio existe, false en caso contrario.
-     */
-    private boolean searchDeamon(int d) {
-        return this.demons.containsKey(d);
-    }
-
-    /**
-     * Verifica si hay un demonio cerca de la posición dada.
-     * 
-     * @param d Posición del demonio.
-     * @return true si hay un demonio cerca, false en caso contrario.
-     */
-    private boolean crashDeamon(int d) {
-        for (int i = (d - 10); i <= (d + 10); i++) {
-            if (searchDeamon(i)) {
-                return true;
-            }
-        }
-        return false;
-    }
-
-    /**
      * Añade un demonio al tablero.
      * 
      * @param d Posición del demonio.
      */
     public void addDeamon(int d) {
-        if (5 <= d && d <= (this.Height - 5) && !searchDeamon(d) && this.isOk) {
-            if (!crashDeamon(d)) {
-                this.isOk = true;
-                Deamon deamon = new Deamon(((this.Width / 2) - (10)), (d - (10)), 20);
-                deamon.makeVisible();
-                demons.put(d, deamon);
-                if (this.particles.size() != 0) {
-                    this.particles.get(0).addDemon((this.Width / 2), d);
-                }
-            } else {
-                errorSignal("Existe un Demonio muy cerca");
-                ok();
+        boolean alreadyExist = false;
+        for (Demon de: demons){
+            if(de.getDistance() == d){
+                alreadyExist = true;
             }
-        } else if (this.isOk) {
-            errorSignal("Demonio fuera del rango");
-            ok();
+        }
+        if(!alreadyExist){
+            Demon newDemon = new Demon(this.w, d);
+            if(isVisible){
+                newDemon.makeVisible();
+            }
+            this.demons.add(newDemon);
+        }else{
+            errorSignal("Ya existe un demonio en este lugar");
         }
     }
 
@@ -211,38 +116,17 @@ public class MaxwellContainer {
      * @param d Posición del demonio.
      */
     public void delDeamon(int d) {
-        if (searchDeamon(d) && this.isOk) {
-            this.isOk = true;
-            this.demons.get(d).erase();
-            this.demons.remove(d);
-            if (this.particles.size() != 0) {
-                this.particles.get(0).delDemon((this.Width / 2), d);
+        Demon demon = null;
+        for (Demon de : demons) {
+            if (de.getDistance() == (d)) {
+                de.makeInvisible();
+                demon  = de;
             }
-        } else if (this.isOk) {
-            errorSignal("No existe ese demonio");
-            ok();
         }
-    }
-
-    /**
-     * Añade partículas al tablero desde una matriz de datos.
-     * 
-     * @param particlesData Matriz con los datos de las partículas.
-     */
-    public void addParticlesForMatriz(int[][] particlesData) {
-        if (((blueParticles + redParticles) == particlesData.length) && this.isOk) {
-            this.isOk = true;
-            for (int i = 0; i < (blueParticles + redParticles); i++) {
-                if (i < redParticles) {
-                    addParticle("red", true, particlesData[i][0], particlesData[i][1], particlesData[i][2], particlesData[i][3]);
-                } else {
-                    addParticle("blue", false, particlesData[i][0], particlesData[i][1], particlesData[i][2], particlesData[i][3]);
-                }
-            }
-        } else if (this.isOk) {
-            this.isOk = false;
-            errorSignal("La cantidad de particulas no coincide");
-            ok();
+        if(demon != null){
+            this.demons.remove(demon);
+        }else{
+            errorSignal("No existe algun demonio en este lugar");
         }
     }
 
@@ -257,35 +141,40 @@ public class MaxwellContainer {
      * @param vy Velocidad en y de la partícula.
      */
     public void addParticle(String color, boolean isRed, int x, int y, int vx, int vy) {
-        if ((0 < Math.abs(x) && Math.abs(x) < (this.Width / 2) && 0 < y && y < (this.Height) && Math.abs(vx) < (this.Width / 2) && Math.abs(vy) < (this.Height) && vx != 0) && this.isOk) {
-            this.isOk = true;
-            Particle partucila = new Particle(color, isRed, x + (this.Width / 2), y, vx, vy);
-            this.particles.add(partucila);
-        } else if (this.isOk) {
-            this.isOk = false;
-            errorSignal("Algun dato de la particula es invalido");
-            ok();
+        boolean alreadyExist = false;
+        for (Particle p : particles) {
+                if(p.getColor().equals(color)){
+                    alreadyExist = true;
+                }
+            }
+        if (!alreadyExist){
+            Particle newParticle = new Particle( color,  isRed, (x*factor)+(w*factor), y*factor,  vx,vy);
+            if(isVisible){
+                newParticle.makeVisible();
+            }
+            this.particles.add(newParticle);
+        }else{
+            errorSignal("Particula con ese identificador ya existe");
         }
     }
 
     /**
-     * Elimina partículas del tablero por color.
+     * Elimina partículas del tablero por su identificador.
      * 
      * @param color Color de las partículas a eliminar.
      */
     public void delParticle(String color) {
-        if ((color.equals("red") || color.equals("blue")) && this.isOk) {
-            this.isOk = true;
-            for (Particle p : this.particles) {
-                p.erase();
+        Particle particle = null;
+        for (Particle p : particles) {
+            if (p.getColor().equals(color)) {
+                p.makeInvisible();
+                particle  = p;
             }
-            this.particles.removeIf(p -> p.getColor().equals(color));
-            for (Particle p : this.particles) {
-                p.draw();
-            }
-        } else if (this.isOk) {
-            errorSignal("Color no es identificado");
-            ok();
+        }
+        if(particle != null){
+            this.particles.remove(particle);
+        }else{
+            errorSignal("Particula no se encuentra");
         }
     }
 
@@ -295,20 +184,19 @@ public class MaxwellContainer {
      * @param ticks Número de pasos de la simulación.
      */
     public void start(int ticks) {
-        if (((ticks > 0) && this.isOk)) {
-            this.isOk = true;
-            for (int i = 0; i < ticks; i++) {
-                for (Particle p : this.particles) {
-                    p.move(1);
+        if(!isGoal()){
+            for (int i=0; i<ticks; i++){
+                for (Particle p : this.particles){
+                    p.move(w,h,demons,holes,this);
                 }
-                finish();
-                if (gameOver) {
+                particles.removeIf(p -> p.getInHole()==true);
+                if(isGoal()){
+                    errorSignal("JUEGO TERMINADO");
                     break;
                 }
             }
-        } else if (this.isOk) {
-            errorSignal("Los tick deben ser mayores a 0");
-            ok();
+        }else{
+            errorSignal("Particulas ya estan bien posicionadas");
         }
     }
 
@@ -316,10 +204,7 @@ public class MaxwellContainer {
      * Verifica si el juego ha terminado.
      */
     public void finish() {
-        if (isGoal()) {
-            gameOver = true;
-            JOptionPane.showMessageDialog(null, "Juego terminado");
-        }
+        System.exit(0);
     }
 
     /**
@@ -329,7 +214,7 @@ public class MaxwellContainer {
      */
     public boolean isGoal() {
         for (Particle p : particles) {
-            if (!p.posicionCorrecta()) {
+            if (!p.rigthPosition(w)) {
                 return false;
             }
         }
@@ -342,16 +227,17 @@ public class MaxwellContainer {
      * @return Matriz con los datos de las partículas.
      */
     public int[][] particles() {
-        int[][] dataParticles = new int[this.particles.size()][4];
-        for (int i = 0; i < this.particles.size(); i++) {
-            int[] data = particles.get(i).getParticleData();
-            dataParticles[i][0] = data[0];
-            dataParticles[i][1] = data[1];
-            dataParticles[i][2] = data[2];
-            dataParticles[i][3] = data[3];
+        if(particles.size() != 0){
+            int[][] dataParticles = new int[this.particles.size()][4];
+            for (int i = 0; i < this.particles.size(); i++) {
+                int[] data = particles.get(i).getParticleData();
+                dataParticles[i] = data;
+            }
+            return dataParticles;
+        }else{
+            errorSignal("No hay Particulas");
+            return null;
         }
-        ordenarMatriz(dataParticles);
-        return dataParticles;
     }
 
     /**
@@ -360,9 +246,17 @@ public class MaxwellContainer {
      * @return Arreglo con las posiciones de los demonios.
      */
     public int[] demons() {
-        int[] dataDemons = demons.keySet().stream().mapToInt(Integer::intValue).toArray();
-        Arrays.sort(dataDemons);
-        return dataDemons;
+        if(demons.size() != 0){
+            int[] dataDemons = new int[this.demons.size()];
+            for (int i = 0; i < this.demons.size(); i++) {
+                dataDemons[i] = this.demons.get(i).getDistance();
+            }
+            Arrays.sort(dataDemons);
+            return dataDemons;
+        }else{
+            errorSignal("No hay Demonios");
+            return null;
+        }
     }
 
     /**
@@ -373,22 +267,14 @@ public class MaxwellContainer {
      * @param particles Número de partículas que puede contener el agujero.
      */
     public void addHole(int x, int y, int particles) {
-        if ((5 <= Math.abs(x) && Math.abs(x) <= this.Width - 5 && 5 <= y && y <= this.Height - 5) && this.isOk) {
-            if (particles > 0) {
-                Hole a = new Hole(x + (this.Width / 2), y, particles);
-                this.holes.add(a);
-                if (this.particles.size() != 0) {
-                    this.particles.get(0).addhole(a);
-                }
-                isOk = true;
-                ok();
-            } else {
-                isOk = false;
-                ok();
+        if(particles > 0){
+            Hole hole = new Hole((x*factor),y*factor,particles);
+            if(isVisible){
+                hole.makeVisible();
             }
-        } else if (this.isOk) {
-            errorSignal("Coordenadas fuera de rango");
-            ok();
+            this.holes.add(hole);
+        }else{
+            errorSignal("Capacidad 0 o negativa");
         }
     }
 
@@ -398,15 +284,17 @@ public class MaxwellContainer {
      * @return Matriz con los datos de los agujeros.
      */
     public int[][] holes() {
-        int[][] dataHoles = new int[holes.size()][3];
-        for (int i = 0; i < holes.size(); i++) {
-            int[] data = holes.get(i).dataHole();
-            dataHoles[i][0] = data[0];
-            dataHoles[i][1] = data[1];
-            dataHoles[i][2] = data[2];
+        if(holes.size() != 0){
+            int[][] dataHoles = new int[holes.size()][3];
+            for (int i = 0; i < holes.size(); i++) {
+                int[] data = holes.get(i).dataHole();
+                dataHoles[i] = data;
+            }
+            return dataHoles;
+        }else{
+            errorSignal("No hay Huecos");
+            return null;
         }
-        ordenarMatriz(dataHoles);
-        return dataHoles;
     }
 
     /**
@@ -415,27 +303,8 @@ public class MaxwellContainer {
      * @param error Mensaje de error.
      */
     private void errorSignal(String error) {
-        if (!isOk && isVisible) {
+        if (isVisible) {
             JOptionPane.showMessageDialog(null, error);
         }
-    }
-
-    /**
-     * Ordena una matriz de enteros.
-     * 
-     * @param matriz Matriz a ordenar.
-     */
-    public static void ordenarMatriz(int[][] matriz) {
-        Arrays.sort(matriz, new Comparator<int[]>() {
-            @Override
-            public int compare(int[] a, int[] b) {
-                for (int i = 0; i < Math.min(a.length, b.length); i++) {
-                    if (a[i] != b[i]) {
-                        return Integer.compare(a[i], b[i]);
-                    }
-                }
-                return Integer.compare(a.length, b.length);
-            }
-        });
     }
 }

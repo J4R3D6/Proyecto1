@@ -10,11 +10,11 @@ import java.awt.geom.*;
 
 public class Circle extends Figure{
 
-    public static final double PI=3.1416;
+    private static final double PI=3.1416;
     
-    private int diameter;
+    protected int diameter;
     
-    public Circle(int x, int y, int d, String Color){
+    protected Circle(int x, int y, int d, String Color){
         diameter = d;
         xPosition = x;
         yPosition = y;
@@ -50,5 +50,27 @@ public class Circle extends Figure{
         erase();
         diameter = newDiameter;
         draw();
+    }
+        protected void move(int vx, int vy){
+        int delta;
+        int gamma;
+        if(vx < 0) {
+            delta = -1;
+            vx = -vx;
+        }else {
+            delta = 1;
+        }
+        if(vy < 0) {
+            gamma = -1;
+            vy = -vy;
+        }else {
+            gamma = 1;
+        }
+
+        for(int i = 0, j=0 ; i < vx && j < vy; i++, j++){
+            xPosition += delta;
+            yPosition += gamma;
+            draw();
+        }
     }
 }

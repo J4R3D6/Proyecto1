@@ -5,58 +5,51 @@ import java.util.*;
  * @author (your name) 
  * @version (a version number or a date)
  */
-public class Hole
-{
-    private int x1,x2,y1,y2;
-    private int centroX,centroY;
-    private int capacidad;
-    private int ocupados = 0;
-    private Circle hole;
+public class Hole{
+    private int capacidad,x,y;
+    private ArrayList<Particle> particles = new ArrayList<>();
     private boolean full = false;
+    private  Circle circle;
 
     public Hole(int x, int y, int particles){
-        this.hole = new Circle(x-10, y-10, 20, "#01ffdc");
-        makeVisible();
-        centroX = x;
-        centroY = y;
-        x1 = x-10;  
-        x2 = x+10; 
-        y1 = y-10; 
-        y2 = y+10;
-        capacidad = particles;
+        this.x = x;
+        this.y = y;
+        this.capacidad = particles;
+        this.circle = new Circle(x,y,15,"black");
     }
-    public void makeVisible(){
-        this.hole.makeVisible();
-    }
-    public void makeInvisible(){
-        this.hole.makeInvisible();
-    } 
     public int[] dataHole(){
         int[] data =  {
-            (centroX-200),
-            centroY,
-            capacidad-ocupados
+            x,
+            y,
+            (capacidad-this.particles.size())
         };
         return data;
     }
     
-    public boolean itsFull(){
-        return this.full;
-    }
-    
-    public void atrapado(){
-        ocupados += 1;
-        capacidadllena();
-    }
-    
-    public ArrayList<Integer> getCoords(){
-        return new ArrayList<>(Arrays.asList(centroX,centroY));
-    }
-    
-    public void capacidadllena(){
-        if (capacidad == ocupados){
-            full = true;
-            makeInvisible();
+    public void cath(Particle particle){
+        if(!this.full){
+            particle.makeInvisible();
+            particle.setInHole(true);
+            particles.add(particle);
+            this.itsFull();
         }
+    }
+    public void makeVisible(){
+        this.circle.makeVisible();
+    }
+    public void makeInvisible(){
+        this.circle.makeInvisible();
+    }
+    private void itsFull(){
+        if(capacidad == this.particles.size()){
+            circle.changeColor("gray");
+            this.full=true;
+        }
+    }
+    public ArrayList<Integer> getCoords(){
+        return new ArrayList<>(Arrays.asList(x,y));
+    }
+    public boolean getFull(){
+        return full;
     }
 } 

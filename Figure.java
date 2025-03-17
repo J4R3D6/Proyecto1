@@ -5,7 +5,7 @@
  * @author (your name)
  * @version (a version number or a date)
  */
-public class Figure
+public class Figure 
 {
     protected int xPosition;
     protected int yPosition;
@@ -94,6 +94,7 @@ public class Figure
         for(int i = 0; i < distance; i++){
             xPosition += delta;
             draw();
+            System.out.println(xPosition);
         }
     }
 
@@ -114,7 +115,9 @@ public class Figure
         for(int i = 0; i < distance; i++){
             yPosition += delta;
             draw();
+            System.out.println(yPosition);
         }
+        
     }
     
     /**

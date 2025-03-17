@@ -1,72 +1,35 @@
-import java.lang.Math;
 import java.util.*;
 /**
  * Write a description of class Particle here.
- * 
- * @author (your name) 
+ *
+ * @author (your name)
  * @version (a version number or a date)
  */
 public class Particle
 {
-    private static final int size = 10;
-    private static int width,height,middle;
-    private int vx,vy;
-    private int x,y;
-    private static ArrayList<ArrayList<Integer>> demonios = new ArrayList<>();
-    private static ArrayList<Hole> holes = new ArrayList<>();
-    //private boolean colision = true;
+    private int x,y,vx,vy;
+    private int size=5;
     private boolean isRed;
     private Circle circle;
     private String color;
+    private boolean inHole = false;
     
+
+    /**
+     * Constructor for objects of class Particle
+     */
     public Particle(String color, boolean Red, int x, int y, int vx, int vy) {
+        this.color = color;
         this.isRed = Red;
         this.vx=vx;
         this.vy=vy;
         this.x=x;
         this.y=y;
-        this.circle= new Circle(x, y, this.size, color);
-        this.color = color;
-    }
-    public void medidas(int w, int h){
-        this.width=w;
-        this.height=h;
-        this.middle= (w/2);
-    }
-    public void erase(){
-        this.circle.erase();
-    }
-    public void delDemon(int x , int y){
-        this.demonios.remove(new ArrayList<>(Arrays.asList(x,y)));
-    }
-    
-    
-    public void addDemon(int x , int y){
-        this.demonios.add(new ArrayList<>(Arrays.asList(x,y)));
-    }
-    public void addhole(Hole a){
-        this.holes.add(a);
-    }
-    
-    public boolean posicionCorrecta(){
-        if(middle < x-this.size && this.isRed){
-            return true;
-        }else if(x < middle && !this.isRed){
-            return true;
+        if(Red){
+            this.circle= new Circle(x, y, size, "red");
+        }else{
+            this.circle= new Circle(x, y, size, "blue");
         }
-        return false;
-    }
-    
-    public void draw(){
-        this.circle.draw();
-    } 
-    
-    public boolean getIsRed(){
-        return this.isRed;
-    }
-    
-    public String getColor(){
-        return this.color;
     }
     
     public void makeVisible(){
@@ -76,59 +39,58 @@ public class Particle
     public void makeInvisible(){
         this.circle.makeInvisible();
     }
-
-    public boolean DemonAccess(int newY) {
-        for (ArrayList<Integer> demon : demonios) {
-            if (demon.get(0) == middle && Math.abs(demon.get(1) - newY) <= 10) {
-                return Math.random() < 0.5;
-            }
-        }
-        return false;
+    public boolean getIsRed(){
+        return this.isRed;
+    }
+    public String getColor() {
+        return this.color;
+    }
+    public int[] getPosition() {
+        return new int[]{x,y};
+    }
+    public int[] getParticleData() {
+        return new int[]{x,y,vx,vy};
     }
     
-    public void move(int dt) {
-        int newX = x + vx * dt;
-        int newY = y + vy * dt;
-        if (newX < 5) {
-            newX = 5;
+    public void move(int w, int h, ArrayList<Demon> demons, ArrayList<Hole> holes, MaxwellContainer tablero){
+        int newX = x + vx;
+        int newY = y + vy;
+        if (newX < 0) {
+            newX = 0;
             vx *= -1;
         }
-        if (newX > width - 5 - size) {
-            newX = width - 5 - size;
+        if (newX > (w*2) - size) {
+            newX = (w*2) - size;
             vx *= -1;
         }
-        if (newY < 5) {
-            newY = 5;
+        if (newY < 0) {
+            newY = 0;
             vy *= -1;
         }
-        if (newY > height - 5 - size) {
-            newY = height - 5 - size;
+        if (newY > h - size) {
+            newY = h - size;
             vy *= -1;
         }
         
         // Intentar cruzar el muro (middle) solo si hay un demonio en la misma coordenada y
-        if ((x < middle-2 && newX >= middle) || (x > middle+2 && newX <= middle)) {
-            if (!DemonAccess(y)) {
-                newX = (vx > 0) ? middle - 1 : middle + 1;
+        if ((x < w && newX >= w) || (x > w  && newX <= w)) {
+            Demon demon = null;
+            for(Demon d:demons){
+                if (Math.abs(d.getDistance() - newY) <= 8) {
+                    demon = d;
+                }
+            }
+            if (demon != null) {
+                if (demon.demonAccess(this)){
+                    newX = (vx > 0) ? w - 1 : w + 1;
+                    vx *= -1;
+                }
+            }else{
+                newX = (vx > 0) ? w - 1 : w + 1;
                 vx *= -1;
             }
         }
-        for (Hole hole : holes) {
-            if (Math.abs(hole.getCoords().get(0) - newX) <=10 && Math.abs(hole.getCoords().get(1) - newY) <=10 ) {
-                if (!hole.itsFull()) {
-                    this.makeInvisible();
-                    vx=0;
-                    vy=0;
-                    hole.atrapado();
-                    if(x<middle){
-                        isRed = false;
-                    }else{
-                        isRed = true;
-                    }
-                    return;
-                }
-            }
-        }
+        crashHole(holes, newX,newY);
 
         // Actualizar posición
         if (newX != x || newY != y) {
@@ -137,8 +99,29 @@ public class Particle
             y = newY;
         }
     }
-    public int[] getParticleData() {
-        return new int[]{(x-200),y,vx,vy};
+    
+    private void crashHole(ArrayList<Hole> holes, int newX, int newY){
+        for (Hole hole : holes) {
+            if (Math.abs(hole.getCoords().get(0) - newX) <=13 && Math.abs(hole.getCoords().get(1) - newY) <=13 ) {
+                
+                hole.cath(this);
+                
+            }
+        }
+    }
+    public boolean rigthPosition(int w){
+         if(w < x && !this.isRed){
+            return true;
+        }else if(x+this.size < w && this.isRed){
+            return true;
+        }
+        return false;
+    }
+    public void setInHole(boolean inHole){
+        this.inHole = inHole;
+    }
+    public boolean getInHole(){
+        return this.inHole;
     }
     public void softMove(int dx, int dy) {
         if (dx != 0 || dy != 0) {
